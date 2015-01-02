@@ -24,19 +24,19 @@ Player.prototype.update = function(dt) {
 Player.prototype.handleInput = function(input) {
     var tile = this.targetTile;
 
-    if ('up' === input) {
+    if ('up' === input && tile.yCoord > 1) {
         tile = this.board.getUpperTile(tile);
     }
 
-    if ('down' == input) {
+    if ('down' == input && tile.yCoord < board.numTilesY - 2) {
         tile = this.board.getLowerTile(tile);
     }
 
-    if ('left' == input) {
+    if ('left' == input && tile.xCoord > 1) {
         tile = this.board.getLeftTile(tile);
     }
 
-    if ('right' == input) {
+    if ('right' == input && tile.xCoord < board.numTilesX - 2) {
         tile = this.board.getRightTile(tile);
     }
 

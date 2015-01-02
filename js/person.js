@@ -27,6 +27,7 @@ var Person = function(sprite, speed, startTile, targetTile) {
  * @param {Tile} tile
  */
 Person.prototype.move = function(tile) {
+    this.targetTile = tile;
     this.xtarget = tile.topLeftX;
     this.ytarget = tile.topLeftY;
 };
@@ -41,7 +42,7 @@ Person.prototype.update = function(dt) {
 
     var sqrt = Math.sqrt(dx * dx + dy * dy);
 
-    if (sqrt < 1.0) {
+    if (sqrt < 4.0) {
         return;
     }
 

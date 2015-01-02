@@ -7,8 +7,7 @@ var Board = function(numTilesX, numTilesY) {
         this[xCoord] = [];
 
         for (var yCoord = 0; yCoord < numTilesY; yCoord++) {
-            var tile = new Tile(xCoord, yCoord);
-            this[xCoord][yCoord] = tile;
+            this[xCoord][yCoord] = new Tile(xCoord, yCoord);
         }
     }
 };

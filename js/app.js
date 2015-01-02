@@ -1,9 +1,5 @@
 
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
-
 var board = new Board(7, 8);
 
 var player = new Player(board, board[3][5]);
@@ -11,13 +7,22 @@ var player = new Player(board, board[3][5]);
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [
-    new Enemy(200, board[0][2], board[6][2], 505),
-    new Enemy(200, board[0][4], board[6][4], 505),
-    new Enemy(200, board[0][0], board[6][6], 505)
-];
+var allEnemies = [];
+//    new Enemy(200, board[0][2], board[6][2], 500),
+//    new Enemy(200, board[0][4], board[6][4], 500),
+//    new Enemy(200, board[0][3], board[6][3], 500),
+//    new Enemy(200, board[0][3], board[6][3], 500)
+//];
 
-//Engine.init();
+function initEnemies(numEnemies, speed, rightBorder) {
+    for (var i = 0; i < numEnemies; i++) {
+        var row = Math.floor(Math.random() * 3 + 2);
+        var enemy = new Enemy(speed, board[0][row], board[6][row], rightBorder);
+        allEnemies.push(enemy);
+    }
+}
+
+initEnemies(6, 200, 500);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
