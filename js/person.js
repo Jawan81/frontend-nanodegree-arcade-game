@@ -1,6 +1,6 @@
 /**
  *
- * @param {string} sprite The image sprite of the Person
+ * @param {string} sprite The initial sprite of the Person
  * @param {number} speed In pixel/sec
  * @param {Tile} startTile Start tile
  * @param {Tile} targetTile Target tile. Set to startTile if undefined.
@@ -12,12 +12,14 @@ var Person = function(sprite, speed, startTile, targetTile) {
     }
 
     this.sprite = sprite;
-    this.x = startTile.centerX;
-    this.y = startTile.centerY;
-    this.xtarget = targetTile.centerX;
-    this.ytarget = targetTile.centerY;
+    this.x = startTile.topLeftX;
+    this.y = startTile.topLeftY;
+    this.xtarget = targetTile.topLeftX;
+    this.ytarget = targetTile.topLeftY;
     this.speed = speed;
+    this.startTile = startTile;
     this.targetTile = targetTile;
+    this.destroyed = false;
 };
 
 /**
@@ -25,20 +27,54 @@ var Person = function(sprite, speed, startTile, targetTile) {
  * @param {Tile} tile
  */
 Person.prototype.move = function(tile) {
-    this.xtarget = tile.centerX;
-    this.ytarget = tile.centerY;
+    this.xtarget = tile.topLeftX;
+    this.ytarget = tile.topLeftY;
 };
 
 Person.prototype.update = function(dt) {
-    this.x += (this.xtarget - this.x) * this.speed * dt;
-    this.y += (this.ytarget - this.y) * this.speed * dt;
+    if (this.destroyed) {
+        return;
+    }
+
+    var dx = this.xtarget - this.x;
+    var dy = this.ytarget - this.y;
+
+    var sqrt = Math.sqrt(dx * dx + dy * dy);
+
+    if (sqrt < 1.0) {
+        return;
+    }
+
+    if (sqrt !== 0.0) {
+        dx = this.speed * dt * dx / sqrt;
+        dy = this.speed * dt * dy / sqrt;
+    }
+
+    this.x += dx;
+    this.y += dy;
 };
 
-// Draw the enemy on the screen, required method for game
 Person.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 Person.prototype.setSprite = function(sprite) {
     this.sprite = sprite;
+};
+
+Person.prototype.destroy = function() {
+    this.destroyed = true;
+};
+
+/**
+ * @param {Tile} tile
+ */
+Person.prototype.respawn = function(tile) {
+    if (tile instanceof Tile) {
+        this.startTile = tile;
+    }
+
+    this.x = this.startTile.topLeftX;
+    this.y = this.startTile.topLeftY;
+    this.destroyed = false;
 };
