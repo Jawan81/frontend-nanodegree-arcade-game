@@ -11,7 +11,7 @@ var Enemy = function(speed, startTile, targetTile, destroyX) {
     this.respawnTime = Date.now();
 
     // Call constructor of parent class
-    Person.call(this, 'images/enemy-bug.png', speed, startTile, targetTile);
+    Person.call(this, 'images/enemy-bug.png', speed, startTile, targetTile, 40);
 };
 
 Enemy.prototype = Object.create(Person.prototype);
@@ -25,7 +25,7 @@ Enemy.prototype.update = function(dt) {
 
     if (this.destroyed) {
         if (this.respawnTime < Date.now()) {
-            this.respawn(this.startTile);
+            this.respawn();
         }
     }
 

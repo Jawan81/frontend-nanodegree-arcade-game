@@ -8,20 +8,30 @@ var Player = function(board, startTile) {
 
     this.board = board;
     this.startTile = startTile;
+    this.freeze = false;
 
     // Call constructor of parent class
-    Person.call(this, 'images/char-boy.png', 300, startTile, startTile);
+    Person.call(this, 'images/char-boy.png', 300, startTile, startTile, 30);
 };
 
 Player.prototype = Object.create(Person.prototype);
 Player.prototype.constructor = Player;
 
-Player.prototype.update = function(dt) {
+Player.prototype.respawn = function() {
+    this.freeze = true;
+    var that = this;
 
-    Person.prototype.update.call(this, dt);
+    setTimeout(function() {
+        Person.prototype.respawn.call(that, true);
+        that.freeze = false;
+    }, 150);
 };
 
 Player.prototype.handleInput = function(input) {
+    if (this.freeze) {
+        return;
+    }
+
     var tile = this.targetTile;
 
     if ('up' === input && tile.yCoord > 1) {
@@ -40,7 +50,21 @@ Player.prototype.handleInput = function(input) {
         tile = this.board.getRightTile(tile);
     }
 
-    console.log(input);
-
     this.move(tile);
+};
+
+Player.prototype.wins = function() {
+    return this.y < 5 && ! this.freeze;
+};
+
+/**
+ *
+ * @param {Array} enemies
+ */
+Player.prototype.dies = function(enemies) {
+    var collides = enemies.some(function(enemy) {
+        return player.collidesWith(enemy);
+    });
+
+    return collides && ! this.freeze;
 };
