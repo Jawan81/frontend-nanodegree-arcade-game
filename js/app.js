@@ -14,21 +14,52 @@ var wins = 0;
 resetGame();
 
 function resetGame() {
-    deaths = 0;
-    wins = 0;
-    player.respawn();
-    allEnemies = [];
-    initEnemies(numEnemies, 200, 400, 500);
+    initEnemies();
+    restart();
+    //setPlayerImage('char-boy.png');
 }
 
-function initEnemies(numEnemies, speed, speedVariance, rightBorder) {
-    for (var i = 0; i < numEnemies; i++) {
-        var row = Math.floor(Math.random() * 3 + 2);
-        var variance = (Math.random() - 0.5) * speedVariance;
-        var mySpeed = speed + variance > 10 ? speed + variance : 10;
-        var enemy = new Enemy(mySpeed, board[0][row], board[6][row], rightBorder);
-        allEnemies.push(enemy);
+function restart() {
+    deaths = 0;
+    wins = 0;
+
+    if (allEnemies.length !== numEnemies) {
+        initEnemies();
     }
+
+    allEnemies.forEach(function(enemy) {
+        enemy.respawn();
+    });
+
+    player.respawn();
+}
+
+function initEnemies() {
+    var speed = 200;
+    var speedVariance = 400;
+    var rightBorder = 500;
+
+    allEnemies = [];
+
+    for (var i = 0; i < 3; i++) {
+        addEnemy(i + 2, speed, speedVariance, rightBorder);
+    }
+
+    if (numEnemies < 4) {
+        return;
+    }
+
+    for (var i = 0; i < numEnemies - 3; i++) {
+        var row = Math.floor(Math.random() * 3 + 2);
+        addEnemy(row, speed, speedVariance, rightBorder);
+    }
+}
+
+function addEnemy(row, speed, speedVariance, rightBorder) {
+    var variance = (Math.random() - 0.5) * speedVariance;
+    var mySpeed = speed + variance > 10 ? speed + variance : 10;
+    var enemy = new Enemy(mySpeed, board[0][row], board[6][row], rightBorder);
+    allEnemies.push(enemy);
 }
 
 function checkCollisions() {
@@ -77,8 +108,16 @@ document.addEventListener('keyup', function(e) {
     }
 });
 
+function setPlayerImage(image) {
+    player.setSprite('images/' + image);
+}
+
 document.getElementById('btn-reset').addEventListener('click', function() {
-   resetGame();
+    resetGame();
+});
+
+document.getElementById('btn-restart').addEventListener('click', function() {
+    restart();
 });
 
 document.getElementById('slider-num-enemies').addEventListener('change', function(event) {
@@ -87,21 +126,21 @@ document.getElementById('slider-num-enemies').addEventListener('change', functio
 });
 
 document.getElementById('img-boy').addEventListener('click', function() {
-    player.setSprite('images/char-boy.png');
+    setPlayerImage('char-boy.png');
 });
 
 document.getElementById('img-cat-girl').addEventListener('click', function() {
-    player.setSprite('images/char-cat-girl.png');
+    setPlayerImage('char-cat-girl.png');
 });
 
 document.getElementById('img-horn-girl').addEventListener('click', function() {
-    player.setSprite('images/char-horn-girl.png');
+    setPlayerImage('char-horn-girl.png');
 });
 
 document.getElementById('img-pink-girl').addEventListener('click', function() {
-    player.setSprite('images/char-pink-girl.png');
+    setPlayerImage('char-pink-girl.png');
 });
 
 document.getElementById('img-princess-girl').addEventListener('click', function() {
-    player.setSprite('images/char-princess-girl.png');
+    setPlayerImage('char-princess-girl.png');
 });
