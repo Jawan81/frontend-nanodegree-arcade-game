@@ -81,11 +81,27 @@ document.getElementById('btn-reset').addEventListener('click', function() {
    resetGame();
 });
 
-function showNumEnemies(num) {
-    numEnemies = num;
-    document.getElementById('num-enemies').innerHTML = num;
-}
+document.getElementById('slider-num-enemies').addEventListener('change', function(event) {
+    numEnemies = event.target.value;
+    document.getElementById('num-enemies').innerHTML = numEnemies;
+});
 
-function selectImage(image) {
-    player.setSprite(image);
-}
+document.getElementById('img-boy').addEventListener('click', function() {
+    player.setSprite('images/char-boy.png');
+});
+
+document.getElementById('img-cat-girl').addEventListener('click', function() {
+    player.setSprite('images/char-cat-girl.png');
+});
+
+document.getElementById('img-horn-girl').addEventListener('click', function() {
+    player.setSprite('images/char-horn-girl.png');
+});
+
+document.getElementById('img-pink-girl').addEventListener('click', function() {
+    player.setSprite('images/char-pink-girl.png');
+});
+
+document.getElementById('img-princess-girl').addEventListener('click', function() {
+    player.setSprite('images/char-princess-girl.png');
+});
