@@ -1,14 +1,25 @@
 
 
 var board = new Board(7, 8);
-
 var player = new Player(board, board[3][5]);
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
+var numEnemies = 6;
+var deaths = 0;
+var wins = 0;
 
+resetGame();
+
+function resetGame() {
+    deaths = 0;
+    wins = 0;
+    player.respawn();
+    allEnemies = [];
+    initEnemies(numEnemies, 200, 400, 500);
+}
 
 function initEnemies(numEnemies, speed, speedVariance, rightBorder) {
     for (var i = 0; i < numEnemies; i++) {
@@ -19,11 +30,6 @@ function initEnemies(numEnemies, speed, speedVariance, rightBorder) {
         allEnemies.push(enemy);
     }
 }
-
-initEnemies(6, 200, 400, 500);
-
-var deaths = 0;
-var wins = 0;
 
 function checkCollisions() {
 
@@ -40,11 +46,11 @@ function checkCollisions() {
 
 function renderStatistics() {
     // clear stats
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, 505, 50);
 
     // render stats
-    ctx.fillStyle = '#AAA';
+    ctx.fillStyle = '#888';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.font = "36pt Impact";
@@ -70,3 +76,16 @@ document.addEventListener('keyup', function(e) {
         player.handleInput(key);
     }
 });
+
+document.getElementById('btn-reset').addEventListener('click', function() {
+   resetGame();
+});
+
+function showNumEnemies(num) {
+    numEnemies = num;
+    document.getElementById('num-enemies').innerHTML = num;
+}
+
+function selectImage(image) {
+    player.setSprite(image);
+}

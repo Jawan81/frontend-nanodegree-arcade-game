@@ -3,9 +3,69 @@
 <head>
     <title>Effective JavaScript: Frogger</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div id="main" class="container">
+        <div class="row">
+            <div id="controls" class="col-md-5">
+                <div class="row">
+                    <h1>Bugger</h1>
+                    <h2>- A Frogger clone -</h2>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button id="btn-reset">Reset to Defaults</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-3">
+                        Choose player:
+                    </div>
+                    <div id="player-image" class="col-md-9">
+                        <div class="col-md-1">
+                            <img src="images/char-boy.png" width="50" height="85" onclick="selectImage('images/char-boy.png')">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1">
+                            <img src="images/char-cat-girl.png" width="50" height="85" onclick="selectImage('images/char-cat-girl.png')">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1">
+                            <img src="images/char-horn-girl.png" width="50" height="85" onclick="selectImage('images/char-horn-girl.png')">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1">
+                            <img src="images/char-pink-girl.png" width="50" height="85" onclick="selectImage('images/char-pink-girl.png')">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-1">
+                            <img src="images/char-princess-girl.png" width="50" height="85" onclick="selectImage('images/char-princess-girl.png')">
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="slider-num-enemies">Number of Enemies:</label>
+                    </div>
+                    <div class="col-md-1">
+                        <span id="num-enemies">6</span>
+                    </div>
+                    <div class="col-md-6">
+                        <input id="slider-num-enemies" type="range" min="1" max="15" value="6" onchange="showNumEnemies(this.value)"/>
+                    </div>
+                </div>
+            </div>
+            <div id="game" class="col-md-7">
+                <canvas id="game-canvas" width="505" height="606"></canvas>
+            </div>
+        </div>
+    </div>
     <script src="js/resources.js"></script>
     <script src="js/helper.js"></script>
     <script src="js/tile.js"></script>

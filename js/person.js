@@ -62,6 +62,8 @@ Person.prototype.render = function() {
 };
 
 Person.prototype.setSprite = function(sprite) {
+    // create cache entry
+    Resources.load(sprite);
     this.sprite = sprite;
 };
 
