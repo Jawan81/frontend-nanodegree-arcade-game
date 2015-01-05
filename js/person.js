@@ -20,7 +20,7 @@ var Person = function(sprite, speed, startTile, targetTile, radius) {
     this.speed = speed;
     this.startTile = startTile;
     this.targetTile = targetTile;
-    this.destroyed = false;
+    this.hidden = false;
     this.radius = radius;
 };
 
@@ -35,7 +35,7 @@ Person.prototype.move = function(tile) {
 };
 
 Person.prototype.update = function(dt) {
-    if (this.destroyed) {
+    if (this.hidden) {
         return;
     }
 
@@ -58,6 +58,10 @@ Person.prototype.update = function(dt) {
 };
 
 Person.prototype.render = function() {
+    if (this.hidden) {
+        return;
+    }
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y - 20);
 };
 
@@ -67,8 +71,8 @@ Person.prototype.setSprite = function(sprite) {
     this.sprite = sprite;
 };
 
-Person.prototype.destroy = function() {
-    this.destroyed = true;
+Person.prototype.hide = function() {
+    this.hidden = true;
 };
 
 /**
@@ -83,7 +87,7 @@ Person.prototype.respawn = function(resetTarget) {
 
     this.x = this.startTile.topLeftX;
     this.y = this.startTile.topLeftY;
-    this.destroyed = false;
+    this.hidden = false;
 };
 
 /**

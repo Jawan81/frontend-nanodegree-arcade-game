@@ -10,54 +10,45 @@ var allEnemies = [];
 var numEnemies = 6;
 var deaths = 0;
 var wins = 0;
+var speed = 200;
+var speedVariance = 400;
+var score = 0;
 
 resetGame();
 
 function resetGame() {
-    initEnemies();
+    resetToDefaults();
     restart();
-    //setPlayerImage('char-boy.png');
 }
 
 function restart() {
     deaths = 0;
     wins = 0;
+    score = 0;
 
-    if (allEnemies.length !== numEnemies) {
-        initEnemies();
-    }
-
-    allEnemies.forEach(function(enemy) {
-        enemy.respawn();
-    });
-
-    player.respawn();
+    initEnemies();
+    player.reset();
 }
 
 function initEnemies() {
-    var speed = 200;
-    var speedVariance = 400;
     var rightBorder = 500;
 
     allEnemies = [];
 
-    for (var i = 0; i < 3; i++) {
-        addEnemy(i + 2, speed, speedVariance, rightBorder);
-    }
-
-    if (numEnemies < 4) {
-        return;
-    }
-
-    for (var i = 0; i < numEnemies - 3; i++) {
-        var row = Math.floor(Math.random() * 3 + 2);
-        addEnemy(row, speed, speedVariance, rightBorder);
+    for (var i = 0; i < numEnemies; i++) {
+        var row = i % 3 + 2;
+        addEnemy(row, rightBorder);
     }
 }
 
-function addEnemy(row, speed, speedVariance, rightBorder) {
+function addEnemy(row, rightBorder) {
     var variance = (Math.random() - 0.5) * speedVariance;
-    var mySpeed = speed + variance > 10 ? speed + variance : 10;
+    var mySpeed = speed + variance;
+
+    if (mySpeed < 20.0) {
+        mySpeed = 20.0;
+    }
+
     var enemy = new Enemy(mySpeed, board[0][row], board[6][row], rightBorder);
     allEnemies.push(enemy);
 }
@@ -75,41 +66,56 @@ function checkCollisions() {
     }
 }
 
+function getScore() {
+    return Math.floor(numEnemies * (wins - deaths) * (speed + speedVariance) / 100);
+}
+
 function renderStatistics() {
     // clear stats
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, 505, 50);
 
+    score = getScore();
     // render stats
     ctx.fillStyle = '#888';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
-    ctx.font = "36pt Impact";
+    ctx.font = "15pt Impact";
     ctx.strokeText('Wins: ' + wins, 10, 40);
     ctx.fillText('Wins: ' + wins, 10, 40);
-    ctx.strokeText('Deaths: ' + deaths, 250, 40);
-    ctx.fillText('Deaths: ' + deaths, 250, 40);
+    ctx.strokeText('Deaths: ' + deaths, 100, 40);
+    ctx.fillText('Deaths: ' + deaths, 100, 40);
+    ctx.strokeText('Score: ' + score, 200, 40);
+    ctx.fillText('Score: ' + score, 200, 40);
 }
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-
-    var key = allowedKeys[e.keyCode];
-
-    if (key !== undefined) {
-        player.handleInput(key);
-    }
-});
 
 function setPlayerImage(image) {
     player.setSprite('images/' + image);
+}
+
+function resetToDefaults() {
+    updateVariance(400);
+    updateSpeed(200);
+    updateNumEnemies(6);
+}
+
+function updateNumEnemies(changedNumEnemies) {
+    numEnemies = changedNumEnemies;
+
+    document.getElementById('num-enemies').innerHTML = numEnemies.toString();
+    document.getElementById('slider-num-enemies').value = numEnemies.toString();
+}
+
+function updateSpeed(changedSpeed) {
+    speed = changedSpeed;
+    document.getElementById('speed').innerHTML = speed.toString();
+    document.getElementById('slider-speed').value = speed.toString();
+}
+
+function updateVariance(variance) {
+    speedVariance = variance;
+    document.getElementById('variance').innerHTML = speedVariance.toString();
+    document.getElementById('slider-variance').value = speedVariance.toString();
 }
 
 document.getElementById('btn-reset').addEventListener('click', function() {
@@ -121,8 +127,34 @@ document.getElementById('btn-restart').addEventListener('click', function() {
 });
 
 document.getElementById('slider-num-enemies').addEventListener('change', function(event) {
-    numEnemies = event.target.value;
-    document.getElementById('num-enemies').innerHTML = numEnemies;
+    var newNumEnemies = parseInt(event.target.value);
+
+    if (newNumEnemies === numEnemies) {
+        return;
+    }
+
+    updateNumEnemies(newNumEnemies);
+});
+
+document.getElementById('slider-speed').addEventListener('change', function(event) {
+    var newSpeed = parseInt(event.target.value);
+
+    if (newSpeed === speed) {
+        return;
+    }
+
+    updateSpeed(newSpeed);
+});
+
+
+document.getElementById('slider-variance').addEventListener('change', function(event) {
+    var newSpeedVariance = parseInt(event.target.value);
+
+    if (newSpeedVariance === speedVariance) {
+        return;
+    }
+
+    updateVariance(newSpeedVariance);
 });
 
 document.getElementById('img-boy').addEventListener('click', function() {
@@ -143,4 +175,21 @@ document.getElementById('img-pink-girl').addEventListener('click', function() {
 
 document.getElementById('img-princess-girl').addEventListener('click', function() {
     setPlayerImage('char-princess-girl.png');
+});
+
+// This listens for key presses and sends the keys to your
+// Player.handleInput() method. You don't need to modify this.
+document.addEventListener('keyup', function(e) {
+    var allowedKeys = {
+        37: 'left',
+        38: 'up',
+        39: 'right',
+        40: 'down'
+    };
+
+    var key = allowedKeys[e.keyCode];
+
+    if (key !== undefined) {
+        player.handleInput(key);
+    }
 });

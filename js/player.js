@@ -11,7 +11,7 @@ var Player = function(board, startTile) {
     this.freeze = false;
 
     // Call constructor of parent class
-    Person.call(this, 'images/char-boy.png', 300, startTile, startTile, 30);
+    Person.call(this, 'images/char-boy.png', 400, startTile, startTile, 30);
 };
 
 Player.prototype = Object.create(Person.prototype);
@@ -67,4 +67,8 @@ Player.prototype.dies = function(enemies) {
     });
 
     return collides && ! this.freeze;
+};
+
+Player.prototype.reset = function() {
+    Person.prototype.respawn.call(this, true);
 };
