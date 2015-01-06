@@ -76,22 +76,7 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
-        checkCollisions();
-    }
-
-    /* This is called by the update function  and loops through all of the
-     * objects within your allEnemies array as defined in app.js and calls
-     * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
-     * the data/properties related to  the object. Do your drawing in your
-     * render methods.
-     */
-    function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update(dt);
+        game.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -143,18 +128,7 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
-        /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
-         */
-        gems.forEach(function(gem) {
-            gem.render();
-        });
-
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
-
-        player.render();
+        game.render();
     }
 
     /* This function does nothing but it could have been a good place to

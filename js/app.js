@@ -2,114 +2,15 @@
 
 var board = new Board(7, 8);
 var player = new Player(board, board[3][5]);
-
-var allEnemies = [];
-var numEnemies = 6;
-var gems = [];
-var deaths = 0;
-var wins = 0;
-var speed = 200;
-var speedVariance = 400;
-var gemsScore = 0;
-var score = 0;
+var game = new Game(board, player);
 
 resetGame();
 
 function resetGame() {
-    resetToDefaults();
-    restart();
-}
-
-function restart() {
-    deaths = 0;
-    wins = 0;
-    gemsScore = 0;
-    score = 0;
-
-    initEnemies();
-    initGems();
-    player.reset();
-}
-
-function initEnemies() {
-    var rightBorder = 500;
-
-    allEnemies = [];
-
-    for (var i = 0; i < numEnemies; i++) {
-        var row = i % 3 + 2;
-        addEnemy(row, rightBorder);
-    }
-}
-
-function addEnemy(row, rightBorder) {
-    var variance = (Math.random() - 0.5) * speedVariance;
-    var mySpeed = speed + variance;
-
-    if (mySpeed < 20.0) {
-        mySpeed = 20.0;
-    }
-
-    var enemy = new Enemy(mySpeed, board[0][row], board[6][row], rightBorder);
-    allEnemies.push(enemy);
-}
-
-function initGems() {
-    gems = [];
-    var sprites = [
-            'images/Gem Blue.png',
-            'images/Gem Green.png',
-            'images/Gem Orange.png'
-        ];
-
-    var gemScore = Math.floor(speed / 5);
-
-    for (var i = 0; i < 3; i++) {
-        do {
-            var row = randomBetween(2, 5);// Math.floor(Math.random() * 3 + 2);
-            var column = randomBetween(1, 6);// Math.floor(Math.random() * 5 + 1);
-            var sprite = randomBetween(0, 3);// Math.floor(Math.random() * 3);
-            var tile = new Tile(column, row);
-            var gem = new Gem(sprites[sprite], tile, gemScore);
-
-            var collides = gems.some(function(other) {
-                return gem.collidesWith(other);
-            });
-
-            if (! collides) {
-                gems.push(gem);
-                break;
-            }
-        } while(true);
-    }
-}
-
-function randomBetween(a, b) {
-    return Math.floor(Math.random() * (b - a) + a);
-}
-
-function checkCollisions() {
-    if (player.dies(allEnemies)) {
-        initGems();
-        player.respawn();
-        deaths++;
-    }
-
-    if (player.wins()) {
-        initGems();
-        player.respawn();
-        wins++;
-    }
-
-    gems.forEach(function(gem) {
-        if (gem.checkPicked(player)) {
-            gemsScore += gem.getScore();
-        }
-    });
-}
-
-function getScore() {
-    return Math.floor(numEnemies * (wins - deaths) * (speed + speedVariance) / 100 + gemsScore);
+    game.reset();
+    updateVariance(game.speedVariance);
+    updateSpeed(game.speed);
+    updateNumEnemies(game.numEnemies);
 }
 
 function renderStatistics() {
@@ -117,61 +18,56 @@ function renderStatistics() {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, 505, 50);
 
-    score = getScore();
     // render stats
     ctx.fillStyle = '#888';
     ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
     ctx.font = "15pt Impact";
-    ctx.strokeText('Wins: ' + wins, 10, 40);
-    ctx.fillText('Wins: ' + wins, 10, 40);
-    ctx.strokeText('Deaths: ' + deaths, 100, 40);
-    ctx.fillText('Deaths: ' + deaths, 100, 40);
-    ctx.strokeText('Score: ' + score, 200, 40);
-    ctx.fillText('Score: ' + score, 200, 40);
+    ctx.strokeText('Wins: ' + game.wins, 10, 40);
+    ctx.fillText('Wins: ' + game.wins, 10, 40);
+    ctx.strokeText('Deaths: ' + game.deaths, 100, 40);
+    ctx.fillText('Deaths: ' + game.deaths, 100, 40);
+    ctx.strokeText('Score: ' + game.score, 200, 40);
+    ctx.fillText('Score: ' + game.score, 200, 40);
 }
 
 function setPlayerImage(image) {
-    player.setSprite('images/' + image);
-}
-
-function resetToDefaults() {
-    updateVariance(400);
-    updateSpeed(200);
-    updateNumEnemies(6);
+    game.player.setSprite('images/' + image);
 }
 
 function updateNumEnemies(changedNumEnemies) {
-    numEnemies = changedNumEnemies;
+    game.numEnemies = changedNumEnemies;
 
-    document.getElementById('num-enemies').innerHTML = numEnemies.toString();
-    document.getElementById('slider-num-enemies').value = numEnemies.toString();
+    document.getElementById('num-enemies').innerHTML = changedNumEnemies.toString();
+    document.getElementById('slider-num-enemies').value = changedNumEnemies.toString();
 }
 
 function updateSpeed(changedSpeed) {
-    speed = changedSpeed;
-    document.getElementById('speed').innerHTML = speed.toString();
-    document.getElementById('slider-speed').value = speed.toString();
+    game.speed = changedSpeed;
+
+    document.getElementById('speed').innerHTML = changedSpeed.toString();
+    document.getElementById('slider-speed').value = changedSpeed.toString();
 }
 
 function updateVariance(changedVariance) {
-    speedVariance = changedVariance;
-    document.getElementById('variance').innerHTML = speedVariance.toString();
-    document.getElementById('slider-variance').value = speedVariance.toString();
+    game.speedVariance = changedVariance;
+
+    document.getElementById('variance').innerHTML = changedVariance.toString();
+    document.getElementById('slider-variance').value = changedVariance.toString();
 }
 
 document.getElementById('btn-reset').addEventListener('click', function() {
-    resetGame();
+    game.reset();
 });
 
 document.getElementById('btn-restart').addEventListener('click', function() {
-    restart();
+    game.restart();
 });
 
 document.getElementById('slider-num-enemies').addEventListener('change', function(event) {
     var newNumEnemies = parseInt(event.target.value);
 
-    if (newNumEnemies === numEnemies) {
+    if (newNumEnemies === game.numEnemies) {
         return;
     }
 
@@ -181,7 +77,7 @@ document.getElementById('slider-num-enemies').addEventListener('change', functio
 document.getElementById('slider-speed').addEventListener('change', function(event) {
     var newSpeed = parseInt(event.target.value);
 
-    if (newSpeed === speed) {
+    if (newSpeed === game.speed) {
         return;
     }
 
@@ -192,7 +88,7 @@ document.getElementById('slider-speed').addEventListener('change', function(even
 document.getElementById('slider-variance').addEventListener('change', function(event) {
     var newSpeedVariance = parseInt(event.target.value);
 
-    if (newSpeedVariance === speedVariance) {
+    if (newSpeedVariance === game.speedVariance) {
         return;
     }
 
@@ -232,6 +128,6 @@ document.addEventListener('keyup', function(e) {
     var key = allowedKeys[e.keyCode];
 
     if (key !== undefined) {
-        player.handleInput(key);
+        game.player.handleInput(key);
     }
 });
