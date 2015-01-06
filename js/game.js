@@ -1,10 +1,13 @@
-var Game = function(board, player) {
+var Game = function(ctx, board, player) {
+    this.ctx = ctx;
     this.board = board;
     this.player = player;
     this.allEnemies = [];
     this.gems = [];
     this.rightBorder = 500;
-    this.restart();
+    this.gameLengthSec = 10;
+    this.highscore = [];
+    this.reset();
 };
 
 Game.prototype.reset = function() {
@@ -19,10 +22,23 @@ Game.prototype.restart = function() {
     this.wins = 0;
     this.gemsScore = 0;
     this.score = 0;
+    this.renderHighscore = false;
+    this.startTime = Date.now();
+    this.gameTimeSec = this.gameLengthSec;
 
     this.createEnemies();
     this.createGems();
     this.player.reset();
+};
+
+Game.prototype.gameTimeExpired = function() {
+    this.highscore.push(this.score);
+    this.highscore.sort(function(a, b) { return b - a; });
+    this.renderHighscore = true;
+    var that = this;
+    setTimeout(function() {
+        that.restart();
+    }, 5000);
 };
 
 Game.prototype.createEnemies = function() {
@@ -121,6 +137,18 @@ Game.prototype.render = function() {
 };
 
 Game.prototype.update = function(dt) {
+
+    if (this.renderHighscore) {
+        return;
+    }
+
+    var timeExpired = (Date.now() - this.startTime) / 1000;
+    this.gameTimeSec = Math.round(this.gameLengthSec - timeExpired);
+
+    if (this.gameTimeSec < 0.5) {
+        this.gameTimeExpired();
+    }
+
     this.allEnemies.forEach(function(enemy) {
         enemy.update(dt);
     });
@@ -129,4 +157,62 @@ Game.prototype.update = function(dt) {
 
     this.checkInteractions();
     this.updateScore();
+};
+
+Game.prototype.renderStatistics = function() {
+
+    if (this.renderHighscore) {
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, 505, 606);
+
+        var num = this.highscore.length;
+
+        if (num > 10) {
+            num = 10;
+        }
+
+        ctx.textAlign = "center";
+        ctx.fillStyle = '#A44510';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.font = "15pt Impact";
+
+        ctx.strokeText('Highscore', 250, 40);
+        ctx.fillText('Highscore', 250, 40);
+
+        var scoreCount = 0;
+
+        for (var i = 0; i < num; i++) {
+            ctx.fillStyle = 'white';
+            var high = this.highscore[i];
+
+            if (high === this.score && scoreCount === 0) {
+                ctx.fillStyle = '#B00F0F';
+                scoreCount++;
+            }
+
+            ctx.strokeText(high, 250, 40 * i + 100);
+            ctx.fillText(high, 250, 40 * i + 100);
+        }
+    } else {
+
+        // clear stats
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, 505, 50);
+
+        // render stats
+        ctx.textAlign = "left";
+        ctx.fillStyle = '#A44510';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 3;
+        ctx.font = "15pt Impact";
+        ctx.strokeText('Wins: ' + this.wins, 10, 40);
+        ctx.fillText('Wins: ' + this.wins, 10, 40);
+        ctx.strokeText('Deaths: ' + this.deaths, 100, 40);
+        ctx.fillText('Deaths: ' + this.deaths, 100, 40);
+        ctx.strokeText('Score: ' + this.score, 200, 40);
+        ctx.fillText('Score: ' + this.score, 200, 40);
+        ctx.strokeText('Time: ' + this.gameTimeSec, 300, 40);
+        ctx.fillText('Time: ' + this.gameTimeSec, 300, 40);
+    }
 };

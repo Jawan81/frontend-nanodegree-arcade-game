@@ -2,33 +2,14 @@
 
 var board = new Board(7, 8);
 var player = new Player(board, board[3][5]);
-var game = new Game(board, player);
+var game = new Game(document.ctx, board, player);
 
-resetGame();
 
 function resetGame() {
     game.reset();
     updateVariance(game.speedVariance);
     updateSpeed(game.speed);
     updateNumEnemies(game.numEnemies);
-}
-
-function renderStatistics() {
-    // clear stats
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, 505, 50);
-
-    // render stats
-    ctx.fillStyle = '#888';
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 3;
-    ctx.font = "15pt Impact";
-    ctx.strokeText('Wins: ' + game.wins, 10, 40);
-    ctx.fillText('Wins: ' + game.wins, 10, 40);
-    ctx.strokeText('Deaths: ' + game.deaths, 100, 40);
-    ctx.fillText('Deaths: ' + game.deaths, 100, 40);
-    ctx.strokeText('Score: ' + game.score, 200, 40);
-    ctx.fillText('Score: ' + game.score, 200, 40);
 }
 
 function setPlayerImage(image) {
@@ -57,7 +38,7 @@ function updateVariance(changedVariance) {
 }
 
 document.getElementById('btn-reset').addEventListener('click', function() {
-    game.reset();
+    resetGame();
 });
 
 document.getElementById('btn-restart').addEventListener('click', function() {

@@ -120,7 +120,7 @@ var Engine = (function(global) {
 
 
         renderEntities();
-        renderStatistics();
+        game.renderStatistics();
     }
 
     /* This function is called by the render function and is called on each game
@@ -136,7 +136,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        resetGame();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
