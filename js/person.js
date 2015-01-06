@@ -8,7 +8,7 @@
  * @constructor
  */
 var Person = function(sprite, speed, startTile, targetTile, radius) {
-    Actor.call(this, sprite, startTile, radius);
+    Entity.call(this, sprite, startTile, radius);
 
     if (typeof targetTile === 'undefined') {
         targetTile = startTile;
@@ -22,7 +22,7 @@ var Person = function(sprite, speed, startTile, targetTile, radius) {
     this.hidden = false;
 };
 
-Person.prototype = Object.create(Actor.prototype);
+Person.prototype = Object.create(Entity.prototype);
 Person.constructor = Person;
 
 /**

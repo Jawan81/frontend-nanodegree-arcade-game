@@ -1,10 +1,10 @@
 var Gem = function(sprite, tile, score) {
-    Actor.call(this, sprite, tile, 20);
+    Entity.call(this, sprite, tile, 20);
     this.picked = false;
     this.score = score;
 };
 
-Gem.prototype = Object.create(Actor.prototype);
+Gem.prototype = Object.create(Entity.prototype);
 Gem.constructor = Gem;
 
 Gem.prototype.pick = function() {

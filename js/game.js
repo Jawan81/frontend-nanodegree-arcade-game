@@ -1,5 +1,11 @@
-var Game = function(ctx, board, player) {
-    this.ctx = ctx;
+/**
+ * The Game class coordinates everything what happens in the game.
+ *
+ * @param {Board} board The Board instance
+ * @param {Player} player The Player instance
+ * @constructor
+ */
+var Game = function(board, player) {
     this.board = board;
     this.player = player;
     this.allEnemies = [];
@@ -10,6 +16,9 @@ var Game = function(ctx, board, player) {
     this.reset();
 };
 
+/**
+ * Resets a game into its initial state.
+ */
 Game.prototype.reset = function() {
     this.speedVariance = 400;
     this.speed = 200;
@@ -17,6 +26,9 @@ Game.prototype.reset = function() {
     this.restart();
 };
 
+/**
+ * Restarts a game.
+ */
 Game.prototype.restart = function() {
     this.deaths = 0;
     this.wins = 0;
@@ -31,6 +43,11 @@ Game.prototype.restart = function() {
     this.player.reset();
 };
 
+/**
+ * Handles the behavior (displaying the highscore) when the game time expires.
+ *
+ *
+ */
 Game.prototype.gameTimeExpired = function() {
     this.highscore.push(this.score);
     this.highscore.sort(function(a, b) { return b - a; });
@@ -41,8 +58,10 @@ Game.prototype.gameTimeExpired = function() {
     }, 5000);
 };
 
+/**
+ * Creates the enemies according to the configured number of enemies.
+ */
 Game.prototype.createEnemies = function() {
-
     this.allEnemies = [];
 
     for (var i = 0; i < this.numEnemies; i++) {
@@ -51,6 +70,11 @@ Game.prototype.createEnemies = function() {
     }
 };
 
+/**
+ * Adds a single enemy to a specific row of the board.
+ *
+ * @param {number} row The number of the row.
+ */
 Game.prototype.addEnemy = function(row) {
     var variance = (Math.random() - 0.5) * this.speedVariance;
     var mySpeed = this.speed + variance;
@@ -63,6 +87,9 @@ Game.prototype.addEnemy = function(row) {
     this.allEnemies.push(enemy);
 };
 
+/**
+ * Creates the gems.
+ */
 Game.prototype.createGems = function() {
     this.gems = [];
 
@@ -94,11 +121,22 @@ Game.prototype.createGems = function() {
     }
 };
 
+/**
+ * Gives a random number within a <= randomNumber < b
+ *
+ * @param {number} a
+ * @param {number} b
+ * @returns {number}
+ */
 Game.prototype.randomBetween = function(a, b) {
     return Math.floor(Math.random() * (b - a) + a);
 };
 
-Game.prototype.checkInteractions = function() {
+/**
+ * Processes all interactions in the game,
+ * i.e. collisions with enemies, gem picking and winning.
+ */
+Game.prototype.processInteractions = function() {
     if (this.player.dies(this.allEnemies)) {
         this.createGems();
         this.player.respawn();
@@ -119,11 +157,17 @@ Game.prototype.checkInteractions = function() {
     });
 };
 
+/**
+ * Updates the score.
+ */
 Game.prototype.updateScore = function() {
     var tmpScore = this.numEnemies * (this.wins - this.deaths) * (this.speed + this.speedVariance) / 100 + this.gemsScore;
     this.score = Math.floor(tmpScore);
 };
 
+/**
+ * Renders all entities of the game.
+ */
 Game.prototype.render = function() {
     this.gems.forEach(function(gem) {
         gem.render();
@@ -136,8 +180,12 @@ Game.prototype.render = function() {
     this.player.render();
 };
 
+/**
+ * Updates the position of all entities of the game and checks if the game time is expired.
+ *
+ * @param {number} dt The time difference to the last call of the function.
+ */
 Game.prototype.update = function(dt) {
-
     if (this.renderHighscore) {
         return;
     }
@@ -155,7 +203,7 @@ Game.prototype.update = function(dt) {
 
     this.player.update(dt);
 
-    this.checkInteractions();
+    this.processInteractions();
     this.updateScore();
 };
 

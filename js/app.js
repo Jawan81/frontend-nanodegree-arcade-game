@@ -2,7 +2,7 @@
 
 var board = new Board(7, 8);
 var player = new Player(board, board[3][5]);
-var game = new Game(document.ctx, board, player);
+var game = new Game(board, player);
 
 
 function resetGame() {
