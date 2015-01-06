@@ -5,7 +5,7 @@ var Game = function(ctx, board, player) {
     this.allEnemies = [];
     this.gems = [];
     this.rightBorder = 500;
-    this.gameLengthSec = 10;
+    this.gameLengthSec = 60;
     this.highscore = [];
     this.reset();
 };

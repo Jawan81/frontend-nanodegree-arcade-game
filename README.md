@@ -1,6 +1,33 @@
-frontend-nanodegree-arcade-game
+Bugger - A Frogger clone
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+This is a clone of the famous Frogger game.
 
-for self-checking their submission.
+Objective
+===
+
+One game takes 60 seconds and your objective is to reach a high score.
+
+This can be achieved by
+
+- crossing the road without colliding with an enemy bug
+- collecting gems
+
+You can move your player with the arrow keys.
+
+Your player and the gems respawn in case you die or you successfully manage to cross the street.
+
+Until the 60 s limit is reached the game does not stop and you can continue trying to collect more points.
+
+Settings
+===
+
+1. You can choose your player character by clicking on one of the character images. This doesn't have any effect on the gameplay.
+2. You can change the number of enemies by moving the "Number of Enemies" slider
+3. You can change the speed of the enemies by moving the "Enemy Speed" slider
+4. You can change the speed variance of the enemies by moving the "Enemy Speed Variance" slider. With a higher speed variance the speed difference of the enemy bugs is bigger.
+
+ Points 2. to 4. have an influence on the score you get when accomplishing an objective. The higher their value the more difficult the game will be and the more points you will get.
+
+GG & HF
+
