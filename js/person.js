@@ -8,21 +8,22 @@
  * @constructor
  */
 var Person = function(sprite, speed, startTile, targetTile, radius) {
+    Actor.call(this, sprite, startTile, radius);
+
     if (typeof targetTile === 'undefined') {
         targetTile = startTile;
     }
 
-    this.sprite = sprite;
-    this.x = startTile.topLeftX;
-    this.y = startTile.topLeftY;
     this.xtarget = targetTile.topLeftX;
     this.ytarget = targetTile.topLeftY;
     this.speed = speed;
     this.startTile = startTile;
     this.targetTile = targetTile;
     this.hidden = false;
-    this.radius = radius;
 };
+
+Person.prototype = Object.create(Actor.prototype);
+Person.constructor = Person;
 
 /**
  *
@@ -57,24 +58,6 @@ Person.prototype.update = function(dt) {
     this.y += dy;
 };
 
-Person.prototype.render = function() {
-    if (this.hidden) {
-        return;
-    }
-
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y - 20);
-};
-
-Person.prototype.setSprite = function(sprite) {
-    // create cache entry
-    Resources.load(sprite);
-    this.sprite = sprite;
-};
-
-Person.prototype.hide = function() {
-    this.hidden = true;
-};
-
 /**
  * @param {Boolean} resetTarget
  */
@@ -88,17 +71,4 @@ Person.prototype.respawn = function(resetTarget) {
     this.x = this.startTile.topLeftX;
     this.y = this.startTile.topLeftY;
     this.hidden = false;
-};
-
-/**
- *
- * @param {Person} other
- */
-Person.prototype.collidesWith = function(other) {
-    var dx = this.x - other.x;
-    var dy = this.y - other.y;
-    var distance = Math.sqrt(dx * dx + dy * dy);
-    var collisionDistance = this.radius + other.radius;
-
-    return distance < collisionDistance;
 };

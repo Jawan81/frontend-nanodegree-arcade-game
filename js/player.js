@@ -62,8 +62,10 @@ Player.prototype.wins = function() {
  * @param {Array} enemies
  */
 Player.prototype.dies = function(enemies) {
+    var that = this;
+
     var collides = enemies.some(function(enemy) {
-        return player.collidesWith(enemy);
+        return that.collidesWith(enemy);
     });
 
     return collides && ! this.freeze;
