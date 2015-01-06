@@ -207,8 +207,10 @@ Game.prototype.update = function(dt) {
     this.updateScore();
 };
 
+/**
+ * Renders the statistics where they can be either in-game stats or the highscore.
+ */
 Game.prototype.renderStatistics = function() {
-
     if (this.renderHighscore) {
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, 505, 606);
@@ -243,7 +245,6 @@ Game.prototype.renderStatistics = function() {
             ctx.fillText(high, 250, 40 * i + 100);
         }
     } else {
-
         // clear stats
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, 505, 50);

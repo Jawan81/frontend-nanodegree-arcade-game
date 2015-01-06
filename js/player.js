@@ -1,11 +1,11 @@
 /**
+ * The Player class contains the functionality of the player entity of the game.
  *
- * @param {Board} board
- * @param {Tile} startTile
+ * @param {Board} board The game board.
+ * @param {Tile} startTile The tile where the player shall start and respawn.
  * @constructor
  */
 var Player = function(board, startTile) {
-
     this.board = board;
     this.startTile = startTile;
     this.freeze = false;
@@ -14,9 +14,21 @@ var Player = function(board, startTile) {
     Person.call(this, 'images/char-boy.png', 400, startTile, startTile, 30);
 };
 
+/**
+ * Player inherits from Person
+ * @type {Person.prototype}
+ */
 Player.prototype = Object.create(Person.prototype);
+
+/**
+ * Make sure the constructor is set correctly in the inheritance hierarchy
+ * @type {Player}
+ */
 Player.prototype.constructor = Player;
 
+/**
+ * Respawns a player at the original position after some timeout.
+ */
 Player.prototype.respawn = function() {
     this.freeze = true;
     var that = this;
@@ -27,6 +39,11 @@ Player.prototype.respawn = function() {
     }, 150);
 };
 
+/**
+ * Handles the user input.
+ *
+ * @param {string} input Can be either "up", "down", "left" or "right"
+ */
 Player.prototype.handleInput = function(input) {
     if (this.freeze) {
         return;
@@ -53,13 +70,19 @@ Player.prototype.handleInput = function(input) {
     this.move(tile);
 };
 
+/**
+ * Checks the winning condition.
+ *
+ * @returns {boolean} Returns TRUE in case the road was crossed.
+ */
 Player.prototype.wins = function() {
     return this.y < 5 && ! this.freeze;
 };
 
 /**
+ * Checks if the player dies by colliding with an enemy.
  *
- * @param {Array} enemies
+ * @param {Array} enemies The array of enemies.
  */
 Player.prototype.dies = function(enemies) {
     var that = this;
@@ -71,6 +94,9 @@ Player.prototype.dies = function(enemies) {
     return collides && ! this.freeze;
 };
 
+/**
+ * Resets a player to its original position.
+ */
 Player.prototype.reset = function() {
     Person.prototype.respawn.call(this, true);
 };
