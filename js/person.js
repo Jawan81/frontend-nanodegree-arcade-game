@@ -1,4 +1,5 @@
 /**
+ * A Person is movable entity on the game board that can be interacted with.
  *
  * @param {string} sprite The initial sprite of the Person
  * @param {number} speed In pixel/sec
@@ -22,12 +23,24 @@ var Person = function(sprite, speed, startTile, targetTile, radius) {
     this.hidden = false;
 };
 
+/**
+ * Make sure we inherit from Entity.
+ *
+ * @type {Entity.prototype}
+ */
 Person.prototype = Object.create(Entity.prototype);
+
+/**
+ * Make sure the constructor is set correctly.
+ *
+ * @type {Person}
+ */
 Person.constructor = Person;
 
 /**
+ * Sets the target tile of a Person so that it will move to that position on updates.
  *
- * @param {Tile} tile
+ * @param {Tile} tile The tile to be moved to.
  */
 Person.prototype.move = function(tile) {
     this.targetTile = tile;
@@ -35,6 +48,11 @@ Person.prototype.move = function(tile) {
     this.ytarget = tile.topLeftY;
 };
 
+/**
+ * Updates the position of a Person.
+ *
+ * @param {number} dt The time difference to the last update.
+ */
 Person.prototype.update = function(dt) {
     if (this.hidden) {
         return;
@@ -45,6 +63,8 @@ Person.prototype.update = function(dt) {
 
     var sqrt = Math.sqrt(dx * dx + dy * dy);
 
+    // make sure we don't suffer of floating point jitter
+    // so stop movement if we reach the last 4 pixels of the target
     if (sqrt < 4.0) {
         return;
     }
@@ -59,7 +79,9 @@ Person.prototype.update = function(dt) {
 };
 
 /**
- * @param {Boolean} resetTarget
+ * Respawns a person at the start tile.
+ *
+ * @param {Boolean} resetTarget When set to true the Person will not move after respawn.
  */
 Person.prototype.respawn = function(resetTarget) {
     if (resetTarget) {

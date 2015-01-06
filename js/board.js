@@ -1,3 +1,10 @@
+/**
+ * The Board class builds and holds all the tiles that make up the game board.
+ *
+ * @param {number} numTilesX Number of tiles in the x-direction
+ * @param {number} numTilesY Number of tiles in the y-direction
+ * @constructor
+ */
 var Board = function(numTilesX, numTilesY) {
 
     this.numTilesX = numTilesX;
@@ -13,8 +20,9 @@ var Board = function(numTilesX, numTilesY) {
 };
 
 /**
+ * Returns the tile above an existing tile.
  *
- * @param {Tile} tile
+ * @param {Tile} tile The existing tile.
  */
 Board.prototype.getUpperTile = function(tile) {
     var y = tile.yCoord;
@@ -27,8 +35,9 @@ Board.prototype.getUpperTile = function(tile) {
 };
 
 /**
+ * Returns the tile below an existing tile.
  *
- * @param {Tile} tile
+ * @param {Tile} tile The existing tile.
  */
 Board.prototype.getLowerTile = function(tile) {
     var y = tile.yCoord;
@@ -41,8 +50,9 @@ Board.prototype.getLowerTile = function(tile) {
 };
 
 /**
+ * Returns the tile to the left of an existing tile.
  *
- * @param {Tile} tile
+ * @param {Tile} tile The existing tile.
  */
 Board.prototype.getLeftTile = function(tile) {
     var x = tile.xCoord;
@@ -55,8 +65,9 @@ Board.prototype.getLeftTile = function(tile) {
 };
 
 /**
+ * Returns the tile to the right of an existing tile.
  *
- * @param {Tile} tile
+ * @param {Tile} tile The existing tile.
  */
 Board.prototype.getRightTile = function(tile) {
     var x = tile.xCoord;

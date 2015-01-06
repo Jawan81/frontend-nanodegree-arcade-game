@@ -1,3 +1,10 @@
+/**
+ * A Tile is a square on which entities can be placed.
+ *
+ * @param {number} xCoord X-coordinate on a board.
+ * @param {number} yCoord Y-coordinate on a board.
+ * @constructor
+ */
 var Tile = function(xCoord, yCoord) {
     this.xCoord = xCoord;
     this.yCoord = yCoord;
