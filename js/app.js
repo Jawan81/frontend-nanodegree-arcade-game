@@ -3,15 +3,14 @@
 var board = new Board(7, 8);
 var player = new Player(board, board[3][5]);
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 var allEnemies = [];
 var numEnemies = 6;
+var gems = [];
 var deaths = 0;
 var wins = 0;
 var speed = 200;
 var speedVariance = 400;
+var gemsScore = 0;
 var score = 0;
 
 resetGame();
@@ -24,9 +23,11 @@ function resetGame() {
 function restart() {
     deaths = 0;
     wins = 0;
+    gemsScore = 0;
     score = 0;
 
     initEnemies();
+    initGems();
     player.reset();
 }
 
@@ -53,21 +54,62 @@ function addEnemy(row, rightBorder) {
     allEnemies.push(enemy);
 }
 
-function checkCollisions() {
+function initGems() {
+    gems = [];
+    var sprites = [
+            'images/Gem Blue.png',
+            'images/Gem Green.png',
+            'images/Gem Orange.png'
+        ];
 
+    var gemScore = Math.floor(speed / 5);
+
+    for (var i = 0; i < 3; i++) {
+        do {
+            var row = randomBetween(2, 5);// Math.floor(Math.random() * 3 + 2);
+            var column = randomBetween(1, 6);// Math.floor(Math.random() * 5 + 1);
+            var sprite = randomBetween(0, 3);// Math.floor(Math.random() * 3);
+            var tile = new Tile(column, row);
+            var gem = new Gem(sprites[sprite], tile, gemScore);
+
+            var collides = gems.some(function(other) {
+                return gem.collidesWith(other);
+            });
+
+            if (! collides) {
+                gems.push(gem);
+                break;
+            }
+        } while(true);
+    }
+}
+
+function randomBetween(a, b) {
+    return Math.floor(Math.random() * (b - a) + a);
+}
+
+function checkCollisions() {
     if (player.dies(allEnemies)) {
+        initGems();
         player.respawn();
         deaths++;
     }
 
     if (player.wins()) {
+        initGems();
         player.respawn();
         wins++;
     }
+
+    gems.forEach(function(gem) {
+        if (gem.checkPicked(player)) {
+            gemsScore += gem.getScore();
+        }
+    });
 }
 
 function getScore() {
-    return Math.floor(numEnemies * (wins - deaths) * (speed + speedVariance) / 100);
+    return Math.floor(numEnemies * (wins - deaths) * (speed + speedVariance) / 100 + gemsScore);
 }
 
 function renderStatistics() {
@@ -112,8 +154,8 @@ function updateSpeed(changedSpeed) {
     document.getElementById('slider-speed').value = speed.toString();
 }
 
-function updateVariance(variance) {
-    speedVariance = variance;
+function updateVariance(changedVariance) {
+    speedVariance = changedVariance;
     document.getElementById('variance').innerHTML = speedVariance.toString();
     document.getElementById('slider-variance').value = speedVariance.toString();
 }
