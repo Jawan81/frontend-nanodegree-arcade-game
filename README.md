@@ -29,5 +29,14 @@ Settings
 
  Points 2. to 4. have an influence on the score you get when accomplishing an objective. The higher their value the more difficult the game will be and the more points you will get.
 
+Buttons
+===
+With the "Restart Game" button you can restart a game that will use your settings. The behavior of this button is similar to what happens when the game is timed out after 60 s.
+
+The "Reset to Defaults" button as the name states resets your settings to their respective default values.
+
+
+
+
 GG & HF
 
