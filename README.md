@@ -3,6 +3,17 @@ Bugger - A Frogger clone
 
 This is a clone of the famous Frogger game.
 
+Installation
+===========
+To play the game you either need to 
+- clone [this repository](https://github.com/Jawan81/frontend-nanodegree-arcade-game/) with Git:
+```
+git clone https://github.com/Jawan81/frontend-nanodegree-arcade-game.git .
+```
+- or download and unzip the [repository's archive file](https://github.com/Jawan81/frontend-nanodegree-arcade-game/archive/master.zip)
+
+Then open the index.html file in the repository with your favorite browser.
+
 Objective
 ===
 
